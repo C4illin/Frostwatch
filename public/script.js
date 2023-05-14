@@ -202,7 +202,7 @@ function getColor(value) {
   max = GnBu.length - 1;
   toGet = Math.round(max * percent);
   color = GnBu[toGet];
-  color = color.map((x) => x * 255);
+  color = color.map((x) => Math.round(x * 255));
   // Return the color as an RGB string
   return `rgb(${color.join(", ")})`;
 }
