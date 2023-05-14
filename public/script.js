@@ -1,40 +1,28 @@
 function getLocation() {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(getWeather);
+    const options = {
+      enableHighAccuracy: false,
+      timeout: 2000,
+      maximumAge: 100000,
+    };
+    navigator.geolocation.getCurrentPosition(
+      (position) => getWeather(position.coords),
+      (error) => getIPLocation(),
+      options
+    );
   } else {
-    alert("Geolocation is not supported");
+    getIPLocation();
   }
 }
 
+function getIPLocation() {
+  console.log("Getting location from IP");
+  fetch("https://ipapi.co/json/")
+    .then((response) => response.json())
+    .then((data) => getWeather(data));
+}
+
 let GnBu = [
-  [0.9092, 0.965, 0.8869],
-  [0.9064, 0.9639, 0.8843],
-  [0.9035, 0.9628, 0.8818],
-  [0.9007, 0.9617, 0.8792],
-  [0.8979, 0.9606, 0.8766],
-  [0.8951, 0.9594, 0.874],
-  [0.8922, 0.9583, 0.8714],
-  [0.8894, 0.9572, 0.8688],
-  [0.8866, 0.9561, 0.8663],
-  [0.8837, 0.955, 0.8637],
-  [0.8809, 0.9539, 0.8611],
-  [0.8781, 0.9528, 0.8585],
-  [0.8757, 0.9518, 0.8558],
-  [0.8732, 0.9508, 0.8531],
-  [0.8707, 0.9499, 0.8504],
-  [0.8683, 0.9489, 0.8477],
-  [0.8658, 0.9479, 0.845],
-  [0.8634, 0.9469, 0.8422],
-  [0.8609, 0.9459, 0.8395],
-  [0.8584, 0.9449, 0.8368],
-  [0.856, 0.944, 0.8341],
-  [0.8535, 0.943, 0.8314],
-  [0.8511, 0.942, 0.8287],
-  [0.8486, 0.941, 0.826],
-  [0.8461, 0.94, 0.8233],
-  [0.8437, 0.939, 0.8206],
-  [0.8412, 0.9381, 0.8179],
-  [0.8388, 0.9371, 0.8152],
   [0.8363, 0.9361, 0.8125],
   [0.8338, 0.9351, 0.8098],
   [0.8314, 0.9341, 0.8071],
@@ -221,8 +209,8 @@ function getColor(value) {
 
 function getWeather(position) {
   let riskel = document.getElementById("risk");
-  const lat = position.coords.latitude;
-  const lon = position.coords.longitude;
+  const lat = position.latitude;
+  const lon = position.longitude;
   riskel.textContent = "Loading data...";
   fetch(`/weather?lat=${lat}&lon=${lon}`)
     .then((response) => {
@@ -232,7 +220,7 @@ function getWeather(position) {
       throw new Error("Network response was not ok.");
     })
     .then((data) => {
-      riskel.textContent = "Calculating risk..."
+      riskel.textContent = "Calculating risk...";
       const risk = data.frostRisk;
       const description = data.riskDescription;
       riskel.textContent = `Risk: ${risk}%`;
