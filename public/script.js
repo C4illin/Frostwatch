@@ -19,7 +19,7 @@ function getLocation() {
 }
 
 function getIPLocation() {
-  fetch("https://ipapi.co/json/")
+  fetch("https://freeipapi.com/api/json")
     .then((response) => response.json())
     .then((data) => getWeather(data));
 }
@@ -215,7 +215,9 @@ function getWeather(position) {
   const lon = position.longitude;
 
   if (position.city) {
-    document.getElementById("footer").textContent = `Location: ${position.city} (IP)`;
+    document.getElementById(
+      "footer"
+    ).textContent = `Location: ${position.cityName} (IP)`;
   } else {
     document.getElementById("footer").textContent = `Location: ${lat}, ${lon} (GPS)`;
   }
