@@ -238,7 +238,6 @@ function getWeather(position) {
       riskel.textContent = `Risk: ${risk}%`;
       document.getElementById("description").textContent = description;
       document.body.style.backgroundColor = getColor(risk);
-      console.log(getColor(risk));
     })
     .catch((error) => {
       console.error("There was a problem fetching the weather data:", error);

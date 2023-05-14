@@ -70,7 +70,7 @@ app.get("/weather", routeCache.cacheSeconds(7200), (req, res) => {
         tminTemp: t.temp.min,
         thumidity: t.humidity,
       };
-      const time = m.dt;
+      const time = new Date(m.dt * 1000);
       const tomorrow = {
         mpressure: m.pressure,
         mtemp: m.temp.day,
@@ -80,7 +80,7 @@ app.get("/weather", routeCache.cacheSeconds(7200), (req, res) => {
         dew_point: m.dew_point,
       };
       const frostRisk = calculateFrostRisk(today, tomorrow);
-      const riskDescription = getRiskDescription(frostRisk);
+      const riskDescription = getRiskDescription(frostRisk, time);
       res.json({ frostRisk, riskDescription });
     })
     .catch((error) => {
@@ -108,7 +108,7 @@ function calculateFrostRisk(today, tomorrow) {
     risk -= 20 * (soiltemp - 4);
   }
 
-  if (dew_point > mornTemp) {
+  if (mornTemp < dew_point) {
     risk *= 1.2;
   }
 
@@ -123,16 +123,22 @@ function calculateFrostRisk(today, tomorrow) {
   return risk;
 }
 
-function getRiskDescription(frostRisk) {
+function getRiskDescription(frostRisk, time) {
+  msg = "";
+
   if (frostRisk <= 20) {
-    return "Low Risk of Frost";
+    msg += "Low Risk of Frost";
   } else if (frostRisk <= 50) {
-    return "Moderate Risk of Frost";
+    msg += "Moderate Risk of Frost";
   } else if (frostRisk <= 70) {
-    return "High Risk of Frost";
+    msg += "High Risk of Frost";
   } else {
-    return "Very High Risk of Frost";
+    msg += "Very High Risk of Frost";
   }
+
+  msg += " for morning " + time.toISOString().slice(0, 10);
+
+  return msg;
 }
 
 app.listen(port, () => {
