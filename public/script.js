@@ -211,6 +211,13 @@ function getWeather(position) {
   let riskel = document.getElementById("risk");
   const lat = position.latitude;
   const lon = position.longitude;
+
+  if (position.city) {
+    document.getElementById("footer").textContent = `Location: ${position.city} (IP)`;
+  } else {
+    document.getElementById("footer").textContent = `Location: ${lat}, ${lon} (GPS)`;
+  }
+
   riskel.textContent = "Loading data...";
   fetch(`/weather?lat=${lat}&lon=${lon}`)
     .then((response) => {
@@ -222,9 +229,8 @@ function getWeather(position) {
     .then((data) => {
       riskel.textContent = "Calculating risk...";
       const risk = data.frostRisk;
-      const description = data.riskDescription;
-      riskel.textContent = `Risk: ${risk}%`;
-      document.getElementById("description").textContent = description;
+      riskel.textContent = `Risk: ${risk} %`;
+      document.getElementById("description").textContent = data.riskDescription;
       document.body.style.backgroundColor = getColor(risk);
     })
     .catch((error) => {
