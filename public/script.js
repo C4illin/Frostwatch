@@ -7,7 +7,10 @@ function getLocation() {
     };
     navigator.geolocation.getCurrentPosition(
       (position) => getWeather(position.coords),
-      (error) => getIPLocation(),
+      (error) => {
+        console.log(error);
+        getIPLocation()
+      },
       options
     );
   } else {
@@ -16,7 +19,6 @@ function getLocation() {
 }
 
 function getIPLocation() {
-  console.log("Getting location from IP");
   fetch("https://ipapi.co/json/")
     .then((response) => response.json())
     .then((data) => getWeather(data));
