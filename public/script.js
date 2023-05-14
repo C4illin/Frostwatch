@@ -218,8 +218,6 @@ function getWeather(position) {
     document.getElementById(
       "footer"
     ).textContent = `Location: ${position.cityName} (IP)`;
-  } else {
-    document.getElementById("footer").textContent = `Location: ${lat}, ${lon} (GPS)`;
   }
 
   riskel.textContent = "Loading data...";
@@ -240,6 +238,31 @@ function getWeather(position) {
     .catch((error) => {
       console.error("There was a problem fetching the weather data:", error);
     });
+
+  if (!position.city) {
+    fetch("https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.city) {
+          document.getElementById(
+            "footer"
+          ).textContent = `Location: ${data.city} (GPS)`;
+        } else {
+          document.getElementById(
+            "footer"
+          ).textContent = `Location: ${data.display_name
+            .split(",")
+            .slice(0, 2)
+            .join(",")} (GPS)}`;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        document.getElementById(
+          "footer"
+        ).textContent = `Location: ${lat}, ${lon} (GPS)`;
+      });
+  }
 }
 
 getLocation();
