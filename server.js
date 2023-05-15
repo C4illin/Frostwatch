@@ -95,6 +95,9 @@ function calculateFrostRisk(today, tomorrow) {
   const { mpressure, mtemp, mornTemp, mminTemp, mhumidity, dew_point } =
     tomorrow;
 
+  // This algorithm is just me guessing
+  // It's not based on any scientific research
+  // Don't use it for anything important
   let risk = 0;
   soiltemp = (ttemp + nightTemp) / 2;
 
@@ -112,7 +115,7 @@ function calculateFrostRisk(today, tomorrow) {
   // Modify risk by multiplication
   if (mornTemp < dew_point) {
     risk = risk * 1.2;
-  } else {
+  } else  if (mornTemp > dew_point+3) {
     risk = risk * 0.8;
   }
 
