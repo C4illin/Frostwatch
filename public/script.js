@@ -214,13 +214,13 @@ function tl(text, lang) {
     case "en":
       return text;
     case "sv":
-      if (text == "Location") {
+      if (text === "Location") {
         return "Plats";
       }
-      if (text == "Loading data...") {
+      if (text === "Loading data...") {
         return "Laddar data...";
       }
-      if (text == "Calculating risk...") {
+      if (text === "Calculating risk...") {
         return "Beräknar risk...";
       }
   }

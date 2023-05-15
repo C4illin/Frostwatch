@@ -96,24 +96,33 @@ function calculateFrostRisk(today, tomorrow) {
     tomorrow;
 
   let risk = 0;
-
   soiltemp = (ttemp + nightTemp) / 2;
 
+  // Modify risk by addition or subtraction
   if (mornTemp < 4 || mminTemp < 4) {
     risk += 20 * (4 - mornTemp);
   }
 
   if (soiltemp < 2) {
     risk += 20 * (2 - soiltemp);
-  } else if (soiltemp > 4) {
-    risk -= 20 * (soiltemp - 4);
+  } else if (soiltemp > 6) {
+    risk -= 20 * (soiltemp - 6);
   }
 
+  // Modify risk by multiplication
   if (mornTemp < dew_point) {
-    risk *= 1.2;
+    risk = risk * 1.2;
+  } else {
+    risk = risk * 0.8;
   }
 
-  risk = (risk * ((mpressure + tpressure) / 2)) / 1013;
+  if (mpressure && tpressure) {
+    risk = risk * ((mpressure + tpressure) / 2 / 1013);
+  }
+
+  if (mhumidity > 80) {
+    risk = risk * (mhumidity / 80) * 1.2;
+  }
 
   if (risk > 100) {
     risk = 100;
@@ -121,6 +130,7 @@ function calculateFrostRisk(today, tomorrow) {
     risk = 0;
   }
 
+  risk = Math.round(risk);
   return risk;
 }
 
