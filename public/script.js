@@ -240,7 +240,7 @@ function getWeather(position) {
     });
 
   if (!position.city) {
-    fetch("https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}")
+    fetch(`https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.city) {
@@ -253,7 +253,7 @@ function getWeather(position) {
           ).textContent = `Location: ${data.display_name
             .split(",")
             .slice(0, 2)
-            .join(",")} (GPS)}`;
+            .join(",")} (GPS)`;
         }
       })
       .catch((error) => {
