@@ -9,6 +9,7 @@ body {
     margin: 0;
     text-align: center;
     box-sizing: border-box;
+    padding: 0.5rem;
 }
 
 #description {
@@ -20,5 +21,5 @@ footer {
     box-sizing: border-box;
     text-align: center;
     bottom: 0;
-    padding: 1rem;
+    padding-bottom: 1rem;
 }
