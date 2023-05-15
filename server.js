@@ -136,7 +136,7 @@ function getRiskDescription(frostRisk, time) {
     msg += "Very High Risk of Frost";
   }
 
-  msg += " for morning " + time.toISOString().slice(0, 10);
+  msg += " for Morning " + time.toISOString().slice(0, 10);
 
   return msg;
 }
