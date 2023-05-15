@@ -236,8 +236,10 @@ function getWeather(position) {
     lang = window.navigator.language.split("-")[0];
   }
 
-  if (position.city) {
-    document.getElementById("footer").textContent = `${tl("Location", lang)}: ${position.cityName} (IP)`;
+  if (position.cityName) {
+    document.getElementById("footer").textContent = `${tl("Location", lang)}: ${
+      position.cityName
+    } (IP)`;
   }
 
   riskel.textContent = tl("Loading data...", lang);
@@ -259,7 +261,7 @@ function getWeather(position) {
       console.error("There was a problem fetching the weather data:", error);
     });
 
-  if (!position.city) {
+  if (!position.cityName) {
     fetch(`https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`)
       .then((response) => response.json())
       .then((data) => {
