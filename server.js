@@ -34,7 +34,7 @@ app.get("/test", (req, res) => {
         minTemp: t.temp.min,
         humidity: t.humidity,
       };
-      const time = new Date(m.dt).toISOString();
+      const time = new Date(m.dt * 1000);
       const tomorrow = {
         pressure: m.pressure,
         temp: m.temp.day,
