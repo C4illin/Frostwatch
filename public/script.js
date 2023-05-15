@@ -9,7 +9,7 @@ function getLocation() {
       (position) => getWeather(position.coords),
       (error) => {
         console.log(error);
-        getIPLocation()
+        getIPLocation();
       },
       options
     );
@@ -209,19 +209,39 @@ function getColor(value) {
   return `rgb(${color.join(", ")})`;
 }
 
+function tl(text, lang) {
+  switch (lang) {
+    case "en":
+      return text;
+    case "sv":
+      if (text == "Location") {
+        return "Plats";
+      }
+      if (text == "Loading data...") {
+        return "Laddar data...";
+      }
+      if (text == "Calculating risk...") {
+        return "Beräknar risk...";
+      }
+  }
+}
+
 function getWeather(position) {
   let riskel = document.getElementById("risk");
   const lat = position.latitude;
   const lon = position.longitude;
 
-  if (position.city) {
-    document.getElementById(
-      "footer"
-    ).textContent = `Location: ${position.cityName} (IP)`;
+  let lang = "en";
+  if (window.navigator.language) {
+    lang = window.navigator.language.split("-")[0];
   }
 
-  riskel.textContent = "Loading data...";
-  fetch(`/weather?lat=${lat}&lon=${lon}`)
+  if (position.city) {
+    document.getElementById("footer").textContent = `${tl("Location", lang)}: ${position.cityName} (IP)`;
+  }
+
+  riskel.textContent = tl("Loading data...", lang);
+  fetch(`/weather?lat=${lat}&lon=${lon}&lang=${lang}`)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -229,7 +249,7 @@ function getWeather(position) {
       throw new Error("Network response was not ok.");
     })
     .then((data) => {
-      riskel.textContent = "Calculating risk...";
+      riskel.textContent = tl("Calculating risk...", lang);
       const risk = data.frostRisk;
       riskel.textContent = `Risk: ${risk} %`;
       document.getElementById("description").textContent = data.riskDescription;
@@ -244,23 +264,23 @@ function getWeather(position) {
       .then((response) => response.json())
       .then((data) => {
         if (data.city) {
-          document.getElementById(
-            "footer"
-          ).textContent = `Location: ${data.city} (GPS)`;
+          document.getElementById("footer").textContent = `${tl(
+            "Location",
+            lang
+          )}: ${data.city} (GPS)`;
         } else {
-          document.getElementById(
-            "footer"
-          ).textContent = `Location: ${data.display_name
-            .split(",")
-            .slice(0, 2)
-            .join(",")} (GPS)`;
+          document.getElementById("footer").textContent = `${tl(
+            "Location",
+            lang
+          )}: ${data.display_name.split(",").slice(0, 2).join(",")} (GPS)`;
         }
       })
       .catch((error) => {
         console.log(error);
-        document.getElementById(
-          "footer"
-        ).textContent = `Location: ${lat}, ${lon} (GPS)`;
+        document.getElementById("footer").textContent = `${tl(
+          "Location",
+          lang
+        )}: ${lat}, ${lon} (GPS)`;
       });
   }
 }

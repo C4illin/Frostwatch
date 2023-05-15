@@ -55,6 +55,7 @@ app.get("/test", (req, res) => {
 app.get("/weather", routeCache.cacheSeconds(7200), (req, res) => {
   const lat = req.query.lat;
   const lon = req.query.lon;
+  const lang = req.query.lang || "en";
   console.log(`lat: ${lat}, lon: ${lon}`);
   axios
     .get(
@@ -80,7 +81,7 @@ app.get("/weather", routeCache.cacheSeconds(7200), (req, res) => {
         dew_point: m.dew_point,
       };
       const frostRisk = calculateFrostRisk(today, tomorrow);
-      const riskDescription = getRiskDescription(frostRisk, time);
+      const riskDescription = getRiskDescription(frostRisk, time, lang);
       res.json({ frostRisk, riskDescription });
     })
     .catch((error) => {
@@ -123,22 +124,44 @@ function calculateFrostRisk(today, tomorrow) {
   return risk;
 }
 
-function getRiskDescription(frostRisk, time) {
+function getRiskDescription(frostRisk, time, lang) {
   msg = "";
-
   if (frostRisk <= 20) {
-    msg += "Low Risk of Frost";
+    msg += tl("Low Risk of Frost", lang);
   } else if (frostRisk <= 50) {
-    msg += "Moderate Risk of Frost";
+    msg += tl("Moderate Risk of Frost", lang);
   } else if (frostRisk <= 70) {
-    msg += "High Risk of Frost";
+    msg += tl("High Risk of Frost", lang);
   } else {
-    msg += "Very High Risk of Frost";
+    msg += tl("Very High Risk of Frost", lang);
   }
-
-  msg += " for Morning " + time.toISOString().slice(0, 10);
-
+  msg += ` ${tl("for Morning", lang)} ${time.toISOString().slice(0, 10)}`;
   return msg;
+}
+
+function tl(text, lang) {
+  switch (lang) {
+    case "en":
+      return text;
+    case "sv":
+      if (text === "Low Risk of Frost") {
+        return "Låg risk för frost";
+      }
+      if (text === "Moderate Risk of Frost") {
+        return "Måttlig risk för frost";
+      }
+      if (text === "High Risk of Frost") {
+        return "Hög risk för frost";
+      }
+      if (text === "Very High Risk of Frost") {
+        return "Mycket hög risk för frost";
+      }
+      if (text === "for Morning") {
+        return "morgonen";
+      }
+    default:
+      return text;
+  }
 }
 
 app.listen(port, () => {
