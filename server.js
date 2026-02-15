@@ -22,7 +22,7 @@ app.get("/test", (req, res) => {
   console.log(`lat: ${lat}, lon: ${lon}`);
   axios
     .get(
-      `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly&units=metric&appid=${API_KEY}`
+      `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly&units=metric&appid=${API_KEY}`
     )
     .then((response) => {
       const t = response.data.daily[0];
@@ -59,7 +59,7 @@ app.get("/weather", routeCache.cacheSeconds(7200), (req, res) => {
   console.log(`lat: ${lat}, lon: ${lon}`);
   axios
     .get(
-      `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly&units=metric&appid=${API_KEY}`
+      `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly&units=metric&appid=${API_KEY}`
     )
     .then((response) => {
       const t = response.data.daily[0];
