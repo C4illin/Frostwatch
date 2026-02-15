@@ -1,4 +1,4 @@
-FROM oven/bun
+FROM oven/bun AS builder
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -9,11 +9,12 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 RUN bun install
-# If you are building your code for production
-# RUN npm ci --only=production
-
-# Bundle app source
 COPY . .
+RUN bun build server.js --compile --minify --bytecode --outfile dist
+
+FROM gcr.io/distroless/cc
+WORKDIR /usr/src/app
+COPY --from=builder /usr/src/app/dist ./
 
 EXPOSE 3000
-CMD [ "bun", "server.js" ]
+CMD [ "/usr/src/app/dist" ]
