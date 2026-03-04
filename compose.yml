@@ -1,0 +1,10 @@
+services:
+  frostwatch:
+    build: .
+    container_name: frostwatch
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - PUID=1000
+      - PGID=1000

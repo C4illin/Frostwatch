@@ -14,6 +14,7 @@ RUN bun build server.js --compile --minify --bytecode --outfile dist
 
 FROM gcr.io/distroless/cc
 WORKDIR /usr/src/app
+COPY public ./public
 COPY --from=builder /usr/src/app/dist ./
 
 EXPOSE 3000
